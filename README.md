@@ -1,2 +1,3 @@
 # myosu-pp-counter-overlay
-Myosu! PP Counter/Overlay — a compact, transparent, resizable Windows osu! stable memory reader with live PP.
+Myosu! PP Counter/Overlay 
+A compact, transparent, resizable Windows osu! stable memory reader with live PP.
