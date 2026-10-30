@@ -1,0 +1,40 @@
+name: Build portable Windows release
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  release:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore pinned runtime and build
+        shell: pwsh
+        run: |
+          ./prepare.ps1
+          ./build.ps1
+          $check = Start-Process ./Myosu.exe -ArgumentList '--self-test' -WindowStyle Hidden -Wait -PassThru
+          if ($check.ExitCode -ne 0) { Get-Content ./test-results.json; throw 'Memory-reader tests failed' }
+      - name: Package portable app
+        shell: pwsh
+        run: |
+          $stage = Join-Path $env:RUNNER_TEMP 'Myosu-PP-Counter-Overlay'
+          New-Item -ItemType Directory -Force $stage | Out-Null
+          $include = @('Myosu.exe','App.ico','App-icon.png','background.gif','calculator','licenses','src','build.ps1','prepare.ps1','README.txt','README.md','THIRD-PARTY.md','VERIFICATION.txt','preview.png')
+          foreach ($item in $include) { Copy-Item -LiteralPath $item -Destination $stage -Recurse -Force }
+          Compress-Archive -Path "$stage/*" -DestinationPath ./Myosu-PP-Counter-Overlay.zip -Force
+      - name: Publish download
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $tag = 'v1.0.0'
+          gh release view $tag --repo $env:GITHUB_REPOSITORY *> $null
+          if ($LASTEXITCODE -ne 0) {
+            gh release create $tag --repo $env:GITHUB_REPOSITORY --target $env:GITHUB_SHA --title 'Myosu! PP Counter/Overlay 1.0' --notes 'Portable Windows osu! stable reader with live PP, animated background, separate transparency controls, resizing, and a transparent character icon. Extract the ZIP and run Myosu.exe.'
+            if ($LASTEXITCODE -ne 0) { throw 'Release creation failed' }
+          }
+          gh release upload $tag ./Myosu-PP-Counter-Overlay.zip --repo $env:GITHUB_REPOSITORY --clobber
+          if ($LASTEXITCODE -ne 0) { throw 'Release upload failed' }

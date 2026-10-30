@@ -1,0 +1,13 @@
+# Machine-local preferences, runtime logs and generated checks
+settings.json
+reader.log
+test-results.json
+pp-test-results.json
+# Bundled in the portable download; restore with prepare.ps1 for a source build
+calculator/node.exe
+# Internal or editor files
+.vs/
+.cache/
+*.pdb
+*.tmp
+*.user

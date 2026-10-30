@@ -1,0 +1,24 @@
+MYOSU! PP COUNTER/OVERLAY - delivery checks, 2026-10-30
+
+PASS: Windows x64 compilation with the installed .NET Framework compiler.
+PASS: 22 checks in test-results.json. These include actual Windows cross-process
+reads of a controlled child, executable-page signature discovery, managed-string
+decoding, gameplay/result pointer paths, all four accuracy formulas, modifiers,
+UR, stale-state clearing in menus, and invalid-pointer rejection.
+PASS: Earlier live build connected to the user's running osu! stable. It read
+the real practice map title/difficulty, HD mod, score 1579, misses 15, accuracy
+10.3448275862%, hit errors/UR, and play time from that game process.
+PASS: The loopback health and JSON endpoints responded in the normal desktop.
+PASS: The updated compact 640x190 design rendered to NeonReader-preview.png.
+Its background and whole-window visibility use per-pixel layered compositing;
+text stays opaque when just the background visibility is lowered.
+PASS: PP calculator (rosu-pp-js 4.0.1, stable scoring) was tested with the user's
+installed practice-map file. Gradual calculations matched independent direct
+partial-map calls for two scores and a retry. See pp-test-results.json.
+
+LIMITS: osu! was no longer running during the final updated build's launch.
+Live PP through a complete new play has not yet been observed. Corner resizing,
+transparency sliders and global shortcuts were implemented but not exercised
+through automated desktop input. The app is running and waiting for stable.
+This does not validate every map, game mode or future osu! update.
+
